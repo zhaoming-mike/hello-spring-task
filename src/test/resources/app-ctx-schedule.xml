@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-lazy-init="false">
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="schedulerName" value="defaultScheduler"/>
+        <property name="triggers">
+            <list>
+                <ref bean="demoTrigger"/>
+            </list>
+        </property>
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+                <property name="corePoolSize" value="1"/>
+                <property name="maxPoolSize" value="1"/>
+                <property name="queueCapacity" value="10"/>
+            </bean>
+        </property>
+        <property name="waitForJobsToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <bean id="demoTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+                <property name="targetObject" ref="demoTask"/>
+                <property name="targetMethod" value="anyNameMethod"/>
+                <property name="concurrent" value="false"/>
+            </bean>
+        </property>
+        <property name="cronExpression" value="0/10 * * * * ?"/>
+    </bean>
+
+</beans>
