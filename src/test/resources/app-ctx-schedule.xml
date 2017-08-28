@@ -9,6 +9,7 @@
         <property name="triggers">
             <list>
                 <ref bean="demoTrigger"/>
+                <ref bean="simpleTaskTrigger"/>
             </list>
         </property>
         <property name="taskExecutor">
@@ -30,6 +31,18 @@
             </bean>
         </property>
         <property name="cronExpression" value="0/10 * * * * ?"/>
+    </bean>
+    
+    <bean id="simpleTaskTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+                <property name="targetObject" ref="simpleTask" />
+                <property name="targetMethod" value="execute" />
+                <property name="concurrent" value="false" />
+            </bean>
+        </property>
+        <property name="startDelay" value="3000" />
+        <property name="repeatInterval" value="5000" />
     </bean>
 
 </beans>
